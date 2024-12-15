@@ -89,7 +89,7 @@ export default function SignUp() {
           />
         </Field>
         <Field
-          label="email"
+          label="Email"
           invalid={!!errors.email && errors.email.length > 0}
           helperText={errors.email}
           required

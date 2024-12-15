@@ -46,7 +46,7 @@ export default function Stopwatch() {
       </Card.Body>
       <Card.Footer className="stopwatch-buttons">
         <Button colorPalette="gray" onClick={startAndStop} variant={"surface"}>
-          {isRunning ? "Start" : "Stop"} <BsStopwatchFill />
+          {isRunning ? "Pause" : "Start"} <BsStopwatchFill />
         </Button>
         <Button colorPalette="gray" variant={"surface"} onClick={reset}>
           Reset

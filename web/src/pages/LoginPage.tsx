@@ -17,6 +17,8 @@ export default function LoginPage() {
   });
   const { login, user } = usePocket();
 
+  const [errors, setErrors] = useState<string>();
+
   if (user) {
     window.location.href = "/";
   }
@@ -29,6 +31,7 @@ export default function LoginPage() {
       window.location.href = "/";
     } catch (err) {
       console.error(err);
+      setErrors("Email or password is incorrect");
     }
   }
 
@@ -44,7 +47,7 @@ export default function LoginPage() {
     <form onSubmit={(e) => signIn(e)}>
       <VStack>
         <Heading>Sign In</Heading>
-        <Field label="email" required>
+        <Field label="Email" required>
           <Input
             variant={"subtle"}
             placeholder="Email"
@@ -54,7 +57,7 @@ export default function LoginPage() {
             required
           />
         </Field>
-        <Field label="Enter your password" required>
+        <Field label="Enter your password" helperText={errors} required>
           <Input
             variant={"subtle"}
             placeholder="Password"
