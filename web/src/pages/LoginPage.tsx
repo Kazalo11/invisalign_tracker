@@ -1,7 +1,7 @@
 import { Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { AuthRecord } from "pocketbase";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Field } from "../components/ui/field";
 import "../index.css";
@@ -16,14 +16,18 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
+  const currentUser: AuthRecord = useUserStore().user;
+
+  if (currentUser) {
+    window.location.href = "/";
+  }
 
   async function login(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { email, password } = formData;
     try {
       await pb.collection("users").authWithPassword(email, password);
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }
@@ -38,11 +42,7 @@ export default function LoginPage() {
       [name]: value,
     });
   };
-  const currentUser: AuthRecord = useUserStore().user;
 
-  if (currentUser) {
-    window.location.href = "/";
-  }
   return (
     <form onSubmit={(e) => login(e)}>
       <VStack>

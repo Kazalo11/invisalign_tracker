@@ -1,12 +1,13 @@
 import PocketBase, { AuthRecord } from "pocketbase";
 import { create } from 'zustand';
 
-export const pb = new PocketBase(`${import.meta.env.VITE_PB_HOST}:${import.meta.env.VITE_PB_PORT}`);
+export const pb = new PocketBase("http://127.0.0.1:8090");
 
 type AuthState = {
 	user: AuthRecord,
 	updateUser: (newUser: AuthRecord) => void
 }
+
 
 
 export const useUserStore = create<AuthState>()((set) => ({
@@ -15,7 +16,6 @@ export const useUserStore = create<AuthState>()((set) => ({
 }))
 
 
-pb.authStore.onChange((auth) => {
-	console.log('authStore changed', auth);
+pb.authStore.onChange(() => {
 	useUserStore((state) => state.updateUser(pb.authStore.record) )
 })
