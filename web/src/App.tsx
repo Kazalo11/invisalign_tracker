@@ -3,6 +3,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Stopwatch from "./components/Stopwatch";
 import LoginPage from "./pages/LoginPage";
+import SignUp from "./pages/SignUpPage";
 
 function App() {
   return (
@@ -10,8 +11,9 @@ function App() {
       <Heading>Invisalign Tracker</Heading>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUp />} />
           <Route path="/" element={<Stopwatch />} />
+          <Route path="/login" element={<LoginPage />} />
         </Routes>
       </Router>
     </div>
