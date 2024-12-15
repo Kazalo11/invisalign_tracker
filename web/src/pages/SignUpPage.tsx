@@ -1,6 +1,6 @@
 import { Heading, Input, Text, VStack } from "@chakra-ui/react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Field } from "../components/ui/field";
 import "../index.css";
@@ -20,7 +20,6 @@ export default function SignUp() {
   });
 
   const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
-  const navigate = useNavigate();
   const { register, login } = usePocket();
 
   async function signUp(e: React.FormEvent<HTMLFormElement>) {
@@ -37,7 +36,7 @@ export default function SignUp() {
       const email = formData.email;
       const password = formData.password;
       await login(email, password);
-      navigate("/");
+      window.location.href = "/";
     } catch (err) {
       console.error(err);
     }

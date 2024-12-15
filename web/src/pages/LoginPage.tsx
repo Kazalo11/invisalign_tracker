@@ -1,11 +1,9 @@
 import { Heading, Input, Text, VStack } from "@chakra-ui/react";
-import { AuthRecord } from "pocketbase";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Field } from "../components/ui/field";
 import "../index.css";
-import { useUserStore } from "../lib/pocketbase";
 import { usePocket } from "../lib/PocketContext";
 
 type LoginFormData = {
@@ -17,10 +15,9 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const currentUser: AuthRecord = useUserStore().user;
-  const { login } = usePocket();
+  const { login, user } = usePocket();
 
-  if (currentUser) {
+  if (user) {
     window.location.href = "/";
   }
 
