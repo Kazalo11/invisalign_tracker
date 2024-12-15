@@ -1,7 +1,7 @@
 import PocketBase, { AuthRecord } from "pocketbase";
 import { create } from 'zustand';
 
-const pb = new PocketBase(`${import.meta.env.VITE_PB_HOST}:${import.meta.env.VITE_PB_PORT}`);
+export const pb = new PocketBase(`${import.meta.env.VITE_PB_HOST}:${import.meta.env.VITE_PB_PORT}`);
 
 type AuthState = {
 	user: AuthRecord,
