@@ -16,14 +16,16 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
-  async function login() {
+  async function login(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     const { email, password } = formData;
-    if (email && password) {
+    try {
       await pb.collection("users").authWithPassword(email, password);
       navigate("/");
-    } else {
-      console.log("Can't sign in without a email and password");
+    } catch (err) {
+      console.error(err);
     }
   }
   async function signOut() {
@@ -38,13 +40,11 @@ export default function LoginPage() {
   };
   const currentUser: AuthRecord = useUserStore().user;
 
-  const navigate = useNavigate();
-
   if (currentUser) {
-    navigate("/");
+    window.location.href = "/";
   }
   return (
-    <form onSubmit={login}>
+    <form onSubmit={(e) => login(e)}>
       <VStack>
         <Heading>Sign In</Heading>
         <Field label="email" required>

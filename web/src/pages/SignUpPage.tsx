@@ -26,23 +26,19 @@ export default function SignUp() {
     e.preventDefault();
 
     const newErrors = validateForm(formData);
-    setErrors(newErrors);
-    if (Object.keys(errors).length !== 0) {
+    if (Object.keys(newErrors).length !== 0) {
+      setErrors(newErrors);
       console.log("Can't submit due to validation");
       return;
     }
     try {
       await pb.collection("users").create(formData);
-      await login();
-    } catch (err) {
-      console.error(err);
-    }
-
-    async function login() {
       const email = formData.email;
       const password = formData.password;
       await pb.collection("users").authWithPassword(email, password);
       navigate("/");
+    } catch (err) {
+      console.error(err);
     }
   }
 
