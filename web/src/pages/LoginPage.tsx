@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Field } from "../components/ui/field";
 import "../index.css";
-import { pb, useUserStore } from "../lib/pocketbase";
+import { useUserStore } from "../lib/pocketbase";
+import { usePocket } from "../lib/PocketContext";
 
 type LoginFormData = {
   email: string;
@@ -17,24 +18,23 @@ export default function LoginPage() {
     password: "",
   });
   const currentUser: AuthRecord = useUserStore().user;
+  const { login } = usePocket();
 
   if (currentUser) {
     window.location.href = "/";
   }
 
-  async function login(e: React.FormEvent<HTMLFormElement>) {
+  async function signIn(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const { email, password } = formData;
     try {
-      await pb.collection("users").authWithPassword(email, password);
+      await login(email, password);
       window.location.href = "/";
     } catch (err) {
       console.error(err);
     }
   }
-  async function signOut() {
-    pb.authStore.clear();
-  }
+
   const handleChange = (e: React.FocusEvent<HTMLInputElement, Element>) => {
     const { name, value } = e.target;
     setFormData({
@@ -44,7 +44,7 @@ export default function LoginPage() {
   };
 
   return (
-    <form onSubmit={(e) => login(e)}>
+    <form onSubmit={(e) => signIn(e)}>
       <VStack>
         <Heading>Sign In</Heading>
         <Field label="email" required>

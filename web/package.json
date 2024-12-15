@@ -12,12 +12,14 @@
   "dependencies": {
     "@chakra-ui/react": "^3.2.3",
     "@emotion/react": "^11.14.0",
+    "jwt-decode": "^4.0.0",
     "next-themes": "^0.4.4",
     "pocketbase": "^0.22.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
     "react-router-dom": "^7.0.2",
+    "usehooks-ts": "^3.1.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

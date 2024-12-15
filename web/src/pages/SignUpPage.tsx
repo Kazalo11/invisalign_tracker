@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Field } from "../components/ui/field";
 import "../index.css";
-import { pb } from "../lib/pocketbase";
+import { usePocket } from "../lib/PocketContext";
 export type SignUpFormData = {
   email: string;
   password: string;
@@ -21,6 +21,7 @@ export default function SignUp() {
 
   const [errors, setErrors] = useState<Partial<SignUpFormData>>({});
   const navigate = useNavigate();
+  const { register, login } = usePocket();
 
   async function signUp(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -32,10 +33,10 @@ export default function SignUp() {
       return;
     }
     try {
-      await pb.collection("users").create(formData);
+      await register(formData);
       const email = formData.email;
       const password = formData.password;
-      await pb.collection("users").authWithPassword(email, password);
+      await login(email, password);
       navigate("/");
     } catch (err) {
       console.error(err);
