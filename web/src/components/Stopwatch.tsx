@@ -33,7 +33,7 @@ export default function Stopwatch() {
     setTime(0);
   };
   return (
-    <Card.Root>
+    <Card.Root width="40vw">
       <Card.Title>
         <Heading size="xl" textAlign={"center"}>
           Timer
