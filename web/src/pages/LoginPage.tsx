@@ -1,5 +1,6 @@
 import { AuthRecord } from "pocketbase";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { pb, useUserStore } from "../lib/pocketbase";
 
 export default function LoginPage() {
@@ -8,6 +9,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState<string | undefined>();
   const [password, setPassword] = useState<string | undefined>();
   const [name, setName] = useState<string | undefined>();
+
+  const navigate = useNavigate();
 
   async function login() {
     if (email && password) {
@@ -29,12 +32,16 @@ export default function LoginPage() {
         passwordConfirm: password,
         name,
       };
-      const createdUser: RecordModel = await pb
-        .collection("users")
-        .create(data);
+      await pb.collection("users").create(data);
       await login();
     } catch (err) {
       console.error(err);
     }
   }
+  if (currentUser) {
+    navigate("/");
+  }
+  return (
+	
+  )
 }
