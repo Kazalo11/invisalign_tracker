@@ -59,18 +59,23 @@ export default function Stopwatch() {
       userId: id,
     };
 
-    try {
-      await pb.collection("times").create(data);
+    const response = await pb.send("/api/internals/log-time", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+
+    if (response.status >= 300) {
+      const message = await response.json();
+      toaster.create({
+        description: `Failed to add time due to ${JSON.stringify(message)}`,
+        type: "error",
+      });
+    } else {
       toaster.create({
         description: "Successfully added time to database",
         type: "success",
       });
       setTime(0);
-    } catch (err) {
-      toaster.create({
-        description: `Failed to add time due to ${err}`,
-        type: "error",
-      });
     }
   }
 

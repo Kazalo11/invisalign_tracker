@@ -43,7 +43,6 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 		newTotalTime := totalTime + data.TimeOut
 
 		if err := app.RunInTransaction(func(txApp core.App) error {
-			// Save the new time record
 			if err := saveTimeRecord(txApp, data); err != nil {
 				return err
 			}
