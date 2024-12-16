@@ -9,6 +9,7 @@ import { usePocket } from "../lib/PocketContext";
 import "./Stopwatch.css";
 import { Button } from "./ui/button";
 import { toaster, Toaster } from "./ui/toaster";
+import { Tooltip } from "./ui/tooltip";
 
 type TimeRecord = {
   timeOut: number;
@@ -100,9 +101,16 @@ export default function Stopwatch() {
             Reset
             <LuTimerReset />
           </Button>
-          <Button onClick={save} disabled={!time}>
-            Save <FaSave />
-          </Button>
+          <Tooltip
+            content="Can only save when time is greater than 0"
+            disabled={!!time}
+            showArrow
+            openDelay={200}
+          >
+            <Button onClick={save} disabled={!time}>
+              Save <FaSave />
+            </Button>
+          </Tooltip>
         </Card.Footer>
       </Card.Root>
       <Toaster />

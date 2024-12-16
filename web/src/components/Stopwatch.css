@@ -24,7 +24,7 @@
     }
     
     .stopwatch-buttons button:first-child {
-	background-color: blue;
+	background-color: black;
     }
     .stopwatch-buttons button:nth-child(2) {
 	background-color: green;
@@ -35,7 +35,7 @@
     }
 
     .stopwatch-buttons button:nth-child(4) {
-	background-color: black
+	background-color: blue
     }
 
     .center-container {
@@ -45,4 +45,10 @@
 	height: 100vh; /* Full viewport height */
 	background-color: #f0f0f0; /* Optional background color */
       }
-      
+      button:disabled {
+	background-color: #d3d3d3; /* Light gray background */
+	color: #a9a9a9; /* Gray text */
+	cursor: not-allowed; /* Show a "not-allowed" cursor */
+	opacity: 0.5; /* Reduce opacity for a "grayed-out" effect */
+	border: none; /* Optional: Remove border for simplicity */
+      }
