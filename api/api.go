@@ -6,17 +6,13 @@ import (
 	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
+	"github.com/Kazalo11/invsalign_tracker/utils"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
 
 const DefaultDateLayout = "2006-01-02 15:04:05.000Z"
-
-type LogTimeData struct {
-	TimeOut int    `json:"timeOut"`
-	UserId  string `json:"userId"`
-}
 
 func LogTime(app *pocketbase.PocketBase) func(e *core.ServeEvent) error {
 	return func(se *core.ServeEvent) error {
@@ -27,7 +23,7 @@ func LogTime(app *pocketbase.PocketBase) func(e *core.ServeEvent) error {
 
 func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error {
 	return func(e *core.RequestEvent) error {
-		data := LogTimeData{}
+		data := utils.LogTimeData{}
 		if err := e.BindBody(&data); err != nil {
 			return e.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 		}
@@ -36,21 +32,10 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 
 		dayRecord, err := database.FetchDayRecord(app, startOfDay, endOfDay)
 		if err != nil {
-			return e.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch day record"})
+			return e.JSON(http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("Failed to fetch day record due to error: %v", err)})
 		}
 
-		totalTime := dayRecord.GetInt("totalTimeOut")
-		dayID := dayRecord.GetString("id")
-		newTotalTime := totalTime + data.TimeOut
-
-		if err := app.RunInTransaction(func(txApp core.App) error {
-			if err := database.SaveTimeRecord(txApp, data.TimeOut, data.UserId, dayID); err != nil {
-				return err
-			}
-
-			dayRecord.Set("totalTimeOut", newTotalTime)
-			return txApp.Save(dayRecord)
-		}); err != nil {
+		if err := database.TransactItems(app, dayRecord, data); err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("Database transaction failed due to err %v", err)})
 		}
 
