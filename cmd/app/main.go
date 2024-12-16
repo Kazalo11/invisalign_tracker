@@ -4,7 +4,7 @@ import (
 	"log/slog"
 
 	"github.com/Kazalo11/invsalign_tracker/api"
-	"github.com/Kazalo11/invsalign_tracker/cron"
+	"github.com/Kazalo11/invsalign_tracker/email"
 	"github.com/pocketbase/pocketbase"
 )
 
@@ -12,7 +12,7 @@ func main() {
 	app := pocketbase.New()
 	app.OnServe().BindFunc(api.LogTime(app))
 
-	if err := app.Cron().Add("emailYesterdayResults", "0 7 * * *", cron.EmailYesterdayResults(app)); err != nil {
+	if err := app.Cron().Add("emailYesterdayResults", "0 7 * * *", email.EmailYesterdayResults(app)); err != nil {
 		slog.Error("Error adding cron job", "Error", err)
 	}
 

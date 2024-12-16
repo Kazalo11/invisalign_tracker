@@ -3,7 +3,6 @@ package api
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
 	"github.com/Kazalo11/invsalign_tracker/utils"
@@ -11,8 +10,6 @@ import (
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
-
-const DefaultDateLayout = "2006-01-02 15:04:05.000Z"
 
 func LogTime(app *pocketbase.PocketBase) func(e *core.ServeEvent) error {
 	return func(se *core.ServeEvent) error {
@@ -28,9 +25,7 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 			return e.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 		}
 
-		startOfDay, endOfDay := getDayRange()
-
-		dayRecord, err := database.FetchDayRecord(app, startOfDay, endOfDay)
+		dayRecord, err := database.FetchDayRecord(app)
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("Failed to fetch day record due to error: %v", err)})
 		}
@@ -41,10 +36,4 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 
 		return e.JSON(http.StatusCreated, map[string]string{"message": "Time record successfully created, day record updated"})
 	}
-}
-
-func getDayRange() (string, string) {
-	startOfDay := time.Now().Truncate(24 * time.Hour)
-	endOfDay := startOfDay.Add(24 * time.Hour)
-	return startOfDay.Format(DefaultDateLayout), endOfDay.Format(DefaultDateLayout)
 }
