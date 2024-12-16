@@ -1,6 +1,6 @@
-import { Heading } from "@chakra-ui/react";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
+import Header from "./components/Header";
 import Stopwatch from "./components/Stopwatch";
 import { PocketProvider } from "./lib/PocketContext";
 import LoginPage from "./pages/LoginPage";
@@ -10,14 +10,14 @@ function App() {
   return (
     <div className="app">
       <PocketProvider>
-        <Heading>Invisalign Tracker</Heading>
-        <Router>
+        <BrowserRouter>
+          <Header />
           <Routes>
             <Route path="/signup" element={<SignUp />} />
             <Route path="/" element={<Stopwatch />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
-        </Router>
+        </BrowserRouter>
       </PocketProvider>
     </div>
   );

@@ -13,7 +13,7 @@ import { Tooltip } from "./ui/tooltip";
 
 type TimeRecord = {
   timeOut: number;
-  user: string;
+  userId: string;
 };
 
 export default function Stopwatch() {
@@ -53,9 +53,10 @@ export default function Stopwatch() {
       console.error("Can't save time for unidentitified user");
       return;
     }
+
     const data: TimeRecord = {
       timeOut: time,
-      user: id,
+      userId: id,
     };
 
     try {
