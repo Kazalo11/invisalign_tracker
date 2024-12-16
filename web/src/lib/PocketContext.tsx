@@ -11,8 +11,15 @@ import {
 } from "react";
 import { useInterval } from "usehooks-ts";
 import { SignUpFormData } from "../pages/SignUpPage";
+import {
+  TypedPocketBase,
+  UsersRecord,
+  UsersResponse,
+} from "./pocketbase-types";
 
-const BASE_URL = "http://127.0.0.1:8090";
+const BASE_URL = import.meta.env.DEV
+  ? "http://127.0.0.1:8090"
+  : `${import.meta.env.VITE_PB_HOST}:${import.meta.env.VITE_PB_PORT}`;
 const fiveMinutesInMs = 5 * 60 * 1000;
 const twoMinutesInMs = 2 * 60 * 1000;
 
@@ -21,7 +28,7 @@ interface DecodedToken {
 }
 
 interface PocketContextType {
-  register: (formData: SignUpFormData) => Promise<RecordModel>;
+  register: (formData: SignUpFormData) => Promise<UsersRecord>;
   login: (
     email: string,
     password: string
@@ -40,7 +47,7 @@ interface PocketProviderProps {
 }
 
 export const PocketProvider: React.FC<PocketProviderProps> = ({ children }) => {
-  const pb = useMemo(() => new PocketBase(BASE_URL), []);
+  const pb: TypedPocketBase = useMemo(() => new PocketBase(BASE_URL), []);
 
   const [token, setToken] = useState<string | null>(pb.authStore.token);
   const [user, setUser] = useState<RecordModel | null>(pb.authStore.record);
@@ -53,8 +60,10 @@ export const PocketProvider: React.FC<PocketProviderProps> = ({ children }) => {
   }, [pb]);
 
   const register = useCallback(
-    async (formData: SignUpFormData): Promise<RecordModel> => {
-      return await pb.collection("users").create(formData);
+    async (formData: SignUpFormData): Promise<UsersRecord> => {
+      return await pb
+        .collection("users")
+        .create<UsersResponse<UsersRecord>>(formData);
     },
     [pb]
   );

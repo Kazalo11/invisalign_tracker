@@ -45,3 +45,15 @@ func TransactItems(app *pocketbase.PocketBase, dayRecord *core.Record, data util
 	return nil
 
 }
+
+func GetAllUserEmails(app *pocketbase.PocketBase) ([]string, error) {
+	records, err := app.FindAllRecords("users")
+	if err != nil {
+		return nil, err
+	}
+	userEmails := make([]string, 0)
+	for _, record := range records {
+		email := record.GetString("email")
+	}
+
+}
