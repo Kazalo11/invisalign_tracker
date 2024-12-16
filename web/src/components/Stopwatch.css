@@ -24,9 +24,25 @@
     }
     
     .stopwatch-buttons button:first-child {
+	background-color: blue;
+    }
+    .stopwatch-buttons button:nth-child(2) {
 	background-color: green;
     }
     
-    .stopwatch-buttons button:last-child {
+    .stopwatch-buttons button:nth-child(3) {
 	background-color: red;
     }
+
+    .stopwatch-buttons button:nth-child(4) {
+	background-color: black
+    }
+
+    .center-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 100vh; /* Full viewport height */
+	background-color: #f0f0f0; /* Optional background color */
+      }
+      

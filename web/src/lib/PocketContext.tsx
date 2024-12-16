@@ -87,7 +87,15 @@ export const PocketProvider: React.FC<PocketProviderProps> = ({ children }) => {
 
   return (
     <PocketContext.Provider
-      value={{ register, login, logout, refreshSession, user, token, pb }}
+      value={{
+        register,
+        login,
+        logout,
+        refreshSession,
+        user,
+        token,
+        pb,
+      }}
     >
       {children}
     </PocketContext.Provider>
