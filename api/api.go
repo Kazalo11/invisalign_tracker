@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/pocketbase/dbx"
+	"github.com/Kazalo11/invsalign_tracker/database"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
@@ -34,16 +34,17 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 
 		startOfDay, endOfDay := getDayRange()
 
-		dayRecord, err := fetchDayRecord(app, startOfDay, endOfDay)
+		dayRecord, err := database.FetchDayRecord(app, startOfDay, endOfDay)
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]string{"error": "Failed to fetch day record"})
 		}
 
 		totalTime := dayRecord.GetInt("totalTimeOut")
+		dayID := dayRecord.GetString("id")
 		newTotalTime := totalTime + data.TimeOut
 
 		if err := app.RunInTransaction(func(txApp core.App) error {
-			if err := saveTimeRecord(txApp, data); err != nil {
+			if err := database.SaveTimeRecord(txApp, data.TimeOut, data.UserId, dayID); err != nil {
 				return err
 			}
 
@@ -61,23 +62,4 @@ func getDayRange() (string, string) {
 	startOfDay := time.Now().Truncate(24 * time.Hour)
 	endOfDay := startOfDay.Add(24 * time.Hour)
 	return startOfDay.Format(DefaultDateLayout), endOfDay.Format(DefaultDateLayout)
-}
-
-func fetchDayRecord(app *pocketbase.PocketBase, startOfDay, endOfDay string) (*core.Record, error) {
-	return app.FindFirstRecordByFilter(
-		"days",
-		"created >= {:start} && created <= {:end}",
-		dbx.Params{"start": startOfDay, "end": endOfDay},
-	)
-}
-
-func saveTimeRecord(txApp core.App, data LogTimeData) error {
-	collection, err := txApp.FindCollectionByNameOrId("times")
-	if err != nil {
-		return err
-	}
-	timeRecord := core.NewRecord(collection)
-	timeRecord.Set("timeOut", data.TimeOut)
-	timeRecord.Set("user", data.UserId)
-	return txApp.Save(timeRecord)
 }
