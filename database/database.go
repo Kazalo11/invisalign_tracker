@@ -69,3 +69,16 @@ func GetAllUsers(app *pocketbase.PocketBase) []*core.Record {
 	return records
 
 }
+
+func CreateDayRecord(app *pocketbase.PocketBase, userId string) error {
+	collection, err := app.FindCollectionByNameOrId("days")
+	if err != nil {
+		return err
+	}
+	record := core.NewRecord(collection)
+	record.Set("totalTimeOut", 0)
+	record.Set("user", userId)
+	record.Set("success", false)
+
+	return app.Save(record)
+}
