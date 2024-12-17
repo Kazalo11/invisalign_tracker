@@ -9,6 +9,15 @@
     <p>This is your roundup for the yesterday's results, {{.Date}}.</p>
     <p>You took out your Invisalign for {{.Time}}</p>
     <p>We hope you had a successful day!</p>
+    {{if not .Success}}
+    <p>
+      You took your Invisalign out for too long, please go to this link to
+      donate:
+      <a href="https://buy.stripe.com/test_bIY7wy7AY0X16HK000" target="_blank"
+        >Donate</a
+      >
+    </p>
+    {{end}}
     <p>Best regards,</p>
     <p>The Invisalign Tracker Team</p>
   </body>

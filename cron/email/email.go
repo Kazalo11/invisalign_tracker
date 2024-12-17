@@ -43,16 +43,20 @@ func EmailYesterdayResults(app *pocketbase.PocketBase) func() {
 
 			timeOut := dayRecord.GetInt("totalTimeOut")
 
+			success := dayRecord.GetBool("success")
+
 			timeFormatted := utils.FormatDuration(timeOut)
 
 			data := struct {
-				Date string
-				User string
-				Time string
+				Date    string
+				User    string
+				Time    string
+				Success bool
 			}{
-				Date: yesterdayFormatted,
-				User: user.GetString("name"),
-				Time: timeFormatted,
+				Date:    yesterdayFormatted,
+				User:    user.GetString("name"),
+				Time:    timeFormatted,
+				Success: success,
 			}
 			var htmlBody bytes.Buffer
 			if err = tmpl.Execute(&htmlBody, &data); err != nil {
