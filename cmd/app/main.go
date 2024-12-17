@@ -11,11 +11,9 @@ import (
 func main() {
 	app := pocketbase.New()
 	app.OnServe().BindFunc(api.LogTime(app))
-
-	if err := app.Cron().Add("emailYesterdayResults", "0 7 * * *", email.EmailYesterdayResults(app)); err != nil {
+	if err := app.Cron().Add("emailYesterdayResults", "* * * * *", email.EmailYesterdayResults(app)); err != nil {
 		slog.Error("Error adding cron job", "Error", err)
 	}
-
 	if err := app.Start(); err != nil {
 		slog.Error("Error starting backend", "Error", err)
 	}

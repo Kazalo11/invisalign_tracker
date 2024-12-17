@@ -2,6 +2,7 @@ package database
 
 import (
 	"log/slog"
+	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/utils"
 	"github.com/pocketbase/dbx"
@@ -9,8 +10,8 @@ import (
 	"github.com/pocketbase/pocketbase/core"
 )
 
-func FetchDayRecord(app *pocketbase.PocketBase) (*core.Record, error) {
-	startOfDay, endOfDay := utils.GetDayRange()
+func FetchDayRecord(app *pocketbase.PocketBase, day time.Time) (*core.Record, error) {
+	startOfDay, endOfDay := utils.GetDayRange(day)
 
 	return app.FindFirstRecordByFilter(
 		"days",
@@ -18,8 +19,8 @@ func FetchDayRecord(app *pocketbase.PocketBase) (*core.Record, error) {
 		dbx.Params{"start": startOfDay, "end": endOfDay},
 	)
 }
-func FetchDayRecordByUser(app *pocketbase.PocketBase, userId string) (*core.Record, error) {
-	startOfDay, endOfDay := utils.GetDayRange()
+func FetchDayRecordByUser(app *pocketbase.PocketBase, userId string, day time.Time) (*core.Record, error) {
+	startOfDay, endOfDay := utils.GetDayRange(day)
 	return app.FindFirstRecordByFilter(
 		"days",
 		"created >= {:start} && created <= {:end} && user ={:userId}",
@@ -63,7 +64,7 @@ func GetAllUsers(app *pocketbase.PocketBase) []*core.Record {
 	records, err := app.FindAllRecords("users")
 	if err != nil {
 		slog.Error("Can't get records due to error", "Error", err)
-		return []*core.Record{}
+		return nil
 	}
 	return records
 

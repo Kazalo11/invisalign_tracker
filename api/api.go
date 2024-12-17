@@ -3,6 +3,7 @@ package api
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
 	"github.com/Kazalo11/invsalign_tracker/utils"
@@ -24,8 +25,8 @@ func logTimeHandler(app *pocketbase.PocketBase) func(e *core.RequestEvent) error
 		if err := e.BindBody(&data); err != nil {
 			return e.JSON(http.StatusBadRequest, map[string]string{"error": "Invalid request body"})
 		}
-
-		dayRecord, err := database.FetchDayRecord(app)
+		currentDate := time.Now()
+		dayRecord, err := database.FetchDayRecord(app, currentDate)
 		if err != nil {
 			return e.JSON(http.StatusInternalServerError, map[string]string{"error": fmt.Sprintf("Failed to fetch day record due to error: %v", err)})
 		}

@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
+	"github.com/Kazalo11/invsalign_tracker/utils"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/tools/mailer"
 	"golang.org/x/exp/slog"
@@ -24,34 +25,34 @@ func EmailYesterdayResults(app *pocketbase.PocketBase) func() {
 
 	yesterdayFormatted := fmt.Sprintf("%s %s, %s", month, day, year)
 
-	users := database.GetAllUsers(app)
-
-	tmpl, err := template.ParseFiles("../../templates/template.html")
+	tmpl, err := template.ParseFiles("templates/template.html")
 	if err != nil {
 		slog.Error("Error parsing template:", "Error", err)
 		return nil
 	}
 
-	if err != nil {
-		slog.Error("Error getting record", "Error", err)
-		return nil
-	}
-
 	return func() {
+		users := database.GetAllUsers(app)
+
 		for _, user := range users {
-			dayRecord, err := database.FetchDayRecordByUser(app, user.Id)
+			dayRecord, err := database.FetchDayRecordByUser(app, user.Id, yesterday)
 			if err != nil {
 				slog.Error("Couldn't get any record due to error", "Error", err)
+				continue
 			}
+
+			timeOut := dayRecord.GetInt("totalTimeOut")
+
+			timeFormatted := utils.FormatDuration(timeOut)
 
 			data := struct {
 				Date string
 				User string
-				Time int
+				Time string
 			}{
 				Date: yesterdayFormatted,
 				User: user.GetString("name"),
-				Time: dayRecord.GetInt("totalTimeOut"),
+				Time: timeFormatted,
 			}
 			var htmlBody bytes.Buffer
 			if err = tmpl.Execute(&htmlBody, &data); err != nil {
