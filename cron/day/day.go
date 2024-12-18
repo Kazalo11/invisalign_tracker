@@ -1,6 +1,7 @@
 package day
 
 import (
+	"log/slog"
 	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
@@ -15,7 +16,11 @@ func CreateDayRecordForUsers(app *pocketbase.PocketBase) func() {
 			id := user.Id
 			_, err := database.FetchDayRecordByUser(app, id, currentTime)
 			if err != nil {
-				database.CreateDayRecord(app, id)
+				err = database.CreateDayRecord(app, id)
+				if err != nil {
+					slog.Error("Couldn't create day record", "Error", err)
+				}
+
 			}
 
 		}
