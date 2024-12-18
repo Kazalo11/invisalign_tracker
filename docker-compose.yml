@@ -3,11 +3,11 @@ services:
   api:
     build:
       context: .
-      dockerfile: Dockerfile.api
+      dockerfile: Dockerfile
     image: ghcr.io/kazalo11/invisalign-api:latest
 
   frontend:
     build:
       context: ./web
-      dockerfile: Dockerfile.frontend
+      dockerfile: Dockerfile
     image: ghcr.io/kazalo11/invisalign-frontend:latest
