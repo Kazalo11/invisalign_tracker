@@ -6,7 +6,6 @@ RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build -o server ./cmd/app
 
-
 #run stage
 FROM debian:bullseye-slim
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
