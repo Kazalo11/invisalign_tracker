@@ -1,0 +1,5 @@
+pocketbase
+main
+web/*
+pb_data
+pb_migrations

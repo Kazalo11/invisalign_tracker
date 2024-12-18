@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/Kazalo11/invsalign_tracker/database"
+	templates "github.com/Kazalo11/invsalign_tracker/template"
 	"github.com/Kazalo11/invsalign_tracker/utils"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/tools/mailer"
@@ -25,7 +26,7 @@ func EmailYesterdayResults(app *pocketbase.PocketBase) func() {
 
 	yesterdayFormatted := fmt.Sprintf("%s %s, %s", month, day, year)
 
-	tmpl, err := template.ParseFiles("templates/template.html")
+	tmpl, err := template.New("").Parse(templates.Email)
 	if err != nil {
 		slog.Error("Error parsing template:", "Error", err)
 		return nil
