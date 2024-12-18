@@ -1,5 +1,6 @@
 #build stage
 FROM golang:1.23-alpine AS builder
+LABEL org.opencontainers.image.source=https://github.com/Kazalo11/invisalign_tracker
 WORKDIR /app
 COPY go.mod go.sum ./
 RUN go mod download

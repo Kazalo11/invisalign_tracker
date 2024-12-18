@@ -1,0 +1,26 @@
+name: Update Github Container Registry
+on:
+  push:
+    branches:
+      - master  
+
+jobs:
+  build_and_publish_images:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install docker-compose
+
+      - name: Log in to GitHub Container Registry
+        run: |
+          docker login ghcr.io -u kazalo11 -p ${{ secrets.GH_PAT }}
+
+      - name: Build and Push API and Frontend Images with Docker Compose
+        run: |
+          docker-compose -f docker-compose.yml build
+          docker-compose -f docker-compose.yml push

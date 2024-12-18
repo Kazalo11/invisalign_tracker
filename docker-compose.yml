@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    image: ghcr.io/kazalo11/invisalign-api:latest
+
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.frontend
+    image: ghcr.io/kazalo11/invisalign-frontend:latest
